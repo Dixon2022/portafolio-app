@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id         String       @id @default(cuid())
+  name       String
+  headline   String
+  bio        String
+  photoUrl   String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  skills     Skill[]
+  socials    SocialLink[]
+  experiences Experience[]
+  projects   Project[]
+  apps       AppItem[]
+  languages       Language[]
+  certifications  Certification[]
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  name      String
+  category  String
+  sortOrder Int      @default(0)
+  profileId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String
+  url       String
+  sortOrder Int      @default(0)
+  profileId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Experience {
+  id          String    @id @default(cuid())
+  role        String
+  company     String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  description String
+  sortOrder   Int       @default(0)
+  profileId   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  name         String
+  description  String
+  technologies String
+  imageUrl     String?
+  projectUrl   String?
+  sortOrder    Int      @default(0)
+  profileId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  profile      Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model AppItem {
+  id           String   @id @default(cuid())
+  name         String
+  description  String
+  platform     String
+  imageUrl     String?
+  downloadUrl  String?
+  sortOrder    Int      @default(0)
+  profileId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  profile      Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Language {
+  id        String   @id @default(cuid())
+  name      String
+  level     String
+  sortOrder Int      @default(0)
+  profileId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Certification {
+  id              String   @id @default(cuid())
+  name            String
+  issuer          String
+  issueDate       String?
+  certificateUrl  String?
+  sortOrder       Int      @default(0)
+  profileId       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  profile         Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model AdminCredential {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  passwordHash        String
+  resetToken          String?   @unique
+  resetTokenExpiresAt DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
