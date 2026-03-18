@@ -25,8 +25,10 @@ import {
   updateSocial,
 } from "@/app/admin/actions";
 import { LogoutButton } from "@/components/admin/logout-button";
+import { VelustroBackground } from "@/components/velustro-background";
 import { authOptions } from "@/lib/auth-options";
 import { getPortfolioContent } from "@/lib/portfolio-data";
+import { getCurrentWeekUniqueVisitorsCount } from "@/lib/visit-analytics";
 
 const inputClass =
   "w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-amber-700 focus:bg-white focus:ring-2 focus:ring-amber-100";
@@ -80,25 +82,36 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const content = await getPortfolioContent();
+  const [content, weeklyVisitors] = await Promise.all([
+    getPortfolioContent(),
+    getCurrentWeekUniqueVisitorsCount(),
+  ]);
   const skillsListClass =
     content.skills.length >= 5 ? "max-h-[34rem] overflow-y-auto pr-1" : "overflow-visible";
   const certsListClass =
     content.certifications.length >= 5 ? "max-h-[34rem] overflow-y-auto pr-1" : "overflow-visible";
 
   return (
-    <main className="min-h-screen bg-[#f3efe7] px-4 py-6 md:px-8 md:py-8">
-      <div className="mx-auto w-full max-w-7xl space-y-6">
+    <main className="relative min-h-screen overflow-hidden bg-[linear-gradient(165deg,#f3efe7_0%,#ebe6dc_48%,#f6f4ef_100%)] px-4 py-6 md:px-8 md:py-8">
+      <VelustroBackground />
+      <div className="relative z-10 mx-auto w-full max-w-7xl space-y-6">
         <header className="rounded-[32px] border border-stone-300 bg-[#1f1b18] p-6 text-stone-100 shadow-[0_24px_50px_-36px_rgba(28,25,23,0.75)]">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-3">
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(300px,0.7fr)] lg:items-stretch">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 md:p-5">
+              <div className="space-y-3">
               <p className="text-[11px] uppercase tracking-[0.28em] text-amber-200/80">Panel privado</p>
               <h1 className="text-3xl font-black leading-tight text-stone-50">Gestion de contenido</h1>
               <p className="max-w-3xl text-sm leading-6 text-stone-300">
                 Vista por secciones en tarjetas. La parte de habilidades ahora mantiene scroll interno cuando ya hay suficientes elementos para no empujar el resto del panel.
               </p>
+              </div>
             </div>
-            <div className="space-y-3 lg:w-[280px]">
+            <div className="space-y-3">
+              <div className="rounded-2xl border border-emerald-300/30 bg-emerald-500/10 p-3">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-emerald-100/90">Visitas semanales</p>
+                <p className="mt-2 text-3xl font-black leading-none text-emerald-200">{weeklyVisitors}</p>
+                <p className="mt-1 text-xs text-emerald-100/80">Personas unicas que entraron esta semana</p>
+              </div>
               <div className="rounded-2xl border border-white/10 bg-[#2c2622] p-3">
                 <p className="text-[11px] uppercase tracking-[0.22em] text-stone-400">Sesion</p>
                 <p className="mt-2 text-sm font-semibold text-white">{session.user.email}</p>

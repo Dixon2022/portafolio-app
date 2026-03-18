@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPortfolioContent } from "@/lib/portfolio-data";
 import { VelustroBackground } from "@/components/velustro-background";
+import { VisitTracker } from "@/components/visit-tracker";
 
 function getGoogleDriveFileId(url: string) {
   const filePathMatch = url.match(/\/file\/d\/([^/]+)/);
@@ -55,6 +56,7 @@ export default async function Home() {
 
   return (
     <main suppressHydrationWarning className="page-atmosphere relative min-h-screen overflow-hidden bg-[linear-gradient(160deg,#f8fafc_0%,#ecfdf5_35%,#ffffff_100%)] px-5 py-10 text-slate-900 md:px-10">
+      <VisitTracker />
       <VelustroBackground />
       <div className="relative z-10 mx-auto w-full max-w-6xl">
         <header className="reveal-up rounded-3xl border border-emerald-200/60 bg-white/80 p-6 shadow-md backdrop-blur" style={{ animationDelay: "40ms" }}>
