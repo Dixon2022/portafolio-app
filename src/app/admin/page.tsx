@@ -24,6 +24,7 @@ import {
   updateSkill,
   updateSocial,
 } from "@/app/admin/actions";
+import { AdminPanels } from "@/components/admin/admin-panels";
 import { LogoutButton } from "@/components/admin/logout-button";
 import { VelustroBackground } from "@/components/velustro-background";
 import { authOptions } from "@/lib/auth-options";
@@ -121,7 +122,18 @@ export default async function AdminPage() {
           </div>
         </header>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <AdminPanels
+          labels={[
+            "Perfil",
+            "Habilidades",
+            "Idiomas",
+            "Redes",
+            "Experiencia",
+            "Proyectos",
+            "Aplicaciones",
+            "Certificaciones",
+          ]}
+        >
           <Card title="Perfil" subtitle="Informacion principal del portafolio y resumen profesional.">
             <form action={updateProfile} className="grid gap-4">
               <div className="space-y-2">
@@ -467,7 +479,7 @@ export default async function AdminPage() {
               </div>
             </div>
           </Card>
-        </div>
+        </AdminPanels>
       </div>
     </main>
   );

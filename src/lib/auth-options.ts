@@ -3,12 +3,35 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { getOrCreateAdminCredentialByEmail } from "@/lib/admin-credential";
 
+const ADMIN_SESSION_MAX_AGE_SECONDS = 60 * 60 * 8;
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
+    maxAge: ADMIN_SESSION_MAX_AGE_SECONDS,
+    updateAge: 60 * 30,
+  },
+  jwt: {
+    maxAge: ADMIN_SESSION_MAX_AGE_SECONDS,
   },
   pages: {
     signIn: "/admin/login",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.authenticatedAt = Math.floor(Date.now() / 1000);
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.email = token.email ?? session.user.email;
+      }
+
+      return session;
+    },
   },
   providers: [
     CredentialsProvider({
