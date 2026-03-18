@@ -50,7 +50,22 @@ export default function RootLayout({
                   };
 
                   clean();
+                  const observer = new MutationObserver(function () {
+                    clean();
+                  });
+
+                  observer.observe(document.documentElement, {
+                    subtree: true,
+                    childList: true,
+                    attributes: true,
+                    attributeFilter: ['bis_skin_checked'],
+                  });
+
                   document.addEventListener('DOMContentLoaded', clean, { once: true });
+                  window.addEventListener('load', clean, { once: true });
+                  setTimeout(clean, 0);
+                  setTimeout(clean, 50);
+                  setTimeout(clean, 200);
                 } catch (_e) {
                   // Ignore extension cleanup failures.
                 }
